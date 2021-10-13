@@ -1,4 +1,4 @@
-# my-project
+StackImplUsingClojure
 
 FIXME: description
 
