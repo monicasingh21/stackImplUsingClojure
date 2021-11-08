@@ -1,6 +1,6 @@
 (ns my-project.core
   (:require [monger.core :as mg])
-  (:require [monger.collection :as mc])
+  (:require [monger.collection :as mc][my-project.userexception :as user_exception])
   (:import org.bson.types.ObjectId)
   (:gen-class))
 
@@ -32,6 +32,11 @@
       (println "Operation:  " operation "\t Updated List:  " updatedList)
       (recur (+ x 1)))))
 
+(defn check [val]
+  (if (= (type val) java.lang.Integer)
+    (println "Value entered is correct")
+    (throw (new user_exception/userexception "caught exception : only Integers should be pass"))))
+
 (defn -main
   [& args]
   (if (mc/exists? db "stack")
@@ -49,7 +54,14 @@
       (println " 5. Delete an element from a particular index")
       (println " 6. Insert an element at a particular index")
       (println " 7. Exit")
-      (def con (Integer. (re-find #"\d+" (read-line))))
+      (try
+        (check "w")
+        (catch my-project.userexception ex
+          (println ex)))
+      (try
+        (def con (Integer. (re-find #"\d+" (read-line))))
+        (catch Exception ex
+          (println "caught exception : only Integers should be pass" (.toString ex))))
       (cond
         (= con 1)
         (do
